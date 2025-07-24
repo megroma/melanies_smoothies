@@ -4,7 +4,7 @@ import streamlit as st
 from snowflake.snowpark.functions import col
 import requests
 
-api_url = "https://my.smoothiefroot.com/api/fruit/watermelon"
+api_url = "https://fruityvice.com/api/fruit/all "
 
 try:
     response = requests.get(api_url, timeout=5)
