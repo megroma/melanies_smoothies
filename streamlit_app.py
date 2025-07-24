@@ -7,7 +7,8 @@ import requests
 # api_url = "https://fruityvice.com/api/fruit/all"
 import requests
 smoothiefroot_response = requests.get("https://fruityvice.com/api/fruit/all")
-st.text(smoothiefroot_response.json())
+# st.text(smoothiefroot_response.json())
+sf_df = st.dataframe(data= smoothiefroot_response.json(), use_container_width= True)
 
 # Write directly to the app
 st.title(f":cup_with_straw: Cutomize Your Smoothie!:cup_with_straw:")
