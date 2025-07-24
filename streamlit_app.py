@@ -4,18 +4,27 @@ import streamlit as st
 from snowflake.snowpark.functions import col
 import requests
 
+api_url = "https://my.smoothiefroot.com/api/fruit/watermelon"
+
 try:
-    response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon", timeout=5)
+    response = requests.get(api_url, timeout=5)
     response.raise_for_status()
-    data = response.json()
-    st.json(data)
-except requests.exceptions.Timeout:
-    st.error("⏱️ The fruit API timed out. Please try again later.")
+    try:
+        data = response.json()
+        st.success("✅ Successfully retrieved fruit data!")
+        st.json(data)
+    except ValueError:
+        st.error("⚠️ API did not return valid JSON.")
+        st.text(response.text[:500])  # limit to 500 characters to avoid dumping all HTML
+
 except requests.exceptions.HTTPError as e:
-    st.error(f"❌ HTTP Error: {e.response.status_code}")
-    st.text(e.response.text)
-except Exception as e:
-    st.error(f"⚠️ Unexpected error: {e}")
+    st.error(f"❌ HTTP Error: {response.status_code}")
+    st.caption("The API returned an error page instead of JSON.")
+    st.text(response.text[:500])  # show partial HTML
+except requests.exceptions.Timeout:
+    st.error("⏱️ Request timed out. Try again later.")
+except requests.exceptions.RequestException as e:
+    st.error(f"⚠️ Connection error: {e}")
 
 # Write directly to the app
 st.title(f":cup_with_straw: Cutomize Your Smoothie!:cup_with_straw:")
